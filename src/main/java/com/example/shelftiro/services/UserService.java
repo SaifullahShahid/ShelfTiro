@@ -6,4 +6,6 @@ public interface UserService {
 
     UserEntity createUser(UserEntity userEntity);
 
+    boolean deleteUser(Long id);
+
 }

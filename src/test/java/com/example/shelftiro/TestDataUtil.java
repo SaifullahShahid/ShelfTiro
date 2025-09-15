@@ -7,6 +7,14 @@ public class TestDataUtil {
 
     private TestDataUtil(){}
 
+    public static UserEntity createTestUserEntityA(){
+        return UserEntity.builder()
+                .name("Saifullah Shahid")
+                .email("saif@gmail.com")
+                .age(21)
+                .build();
+    }
+
     public static UserDto createTestUserDtoA(){
         return UserDto.builder()
                 .name("Saifullah Shahid")

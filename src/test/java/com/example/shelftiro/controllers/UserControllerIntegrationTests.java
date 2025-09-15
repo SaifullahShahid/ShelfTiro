@@ -3,6 +3,7 @@ package com.example.shelftiro.controllers;
 
 import com.example.shelftiro.TestDataUtil;
 import com.example.shelftiro.domain.dto.UserDto;
+import com.example.shelftiro.domain.entities.UserEntity;
 import com.example.shelftiro.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -49,7 +50,7 @@ public class UserControllerIntegrationTests {
     }
 
     @Test
-    public void testThatCreateUserSuccessfullyReturnsSavedUser() throws Exception{
+    public void testThatCreateUserSuccessfullyReturnsSavedUser() throws Exception {
 
         UserDto userDto = TestDataUtil.createTestUserDtoB();
         String userJson = objectMapper.writeValueAsString(userDto);
@@ -69,6 +70,19 @@ public class UserControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.age").value(30)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.createdDate").exists()
+        );
+    }
+    @Test
+    public void testThatDeleteUserSuccessfullyReturnsHttp204NoContent() throws Exception {
+
+        UserEntity testUserEntityA = TestDataUtil.createTestUserEntityA();
+        UserEntity savedUserEntityA = userService.createUser(testUserEntityA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/users/"+ savedUserEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNoContent()
         );
 
 

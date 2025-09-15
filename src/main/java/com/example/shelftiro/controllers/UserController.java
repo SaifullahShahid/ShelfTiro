@@ -22,10 +22,18 @@ public class UserController {
 
     @PostMapping(path = "/users")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto){
-
         UserEntity userEntity = userMapper.mapFromUserDto(userDto);
         UserEntity savedUserEntity = userService.createUser(userEntity);
         return new ResponseEntity<>(userMapper.mapToUserDto(savedUserEntity), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(path="/users/{id}")
+    public ResponseEntity <Void> deleteUser(@PathVariable("id") Long id){
+        boolean deleted = userService.deleteUser(id);
+        if(!deleted){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 }
