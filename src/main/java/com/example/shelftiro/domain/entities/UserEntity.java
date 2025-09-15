@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 
@@ -26,7 +27,10 @@ public class UserEntity {
     @Column(nullable = false)
     private String email;
 
+    private Integer age;
+
     @Column(name = "joinDate",nullable = false, updatable = false)
-    private LocalDate createdDate = LocalDate.now();
+    @CreationTimestamp
+    private LocalDate createdDate;
 
 }

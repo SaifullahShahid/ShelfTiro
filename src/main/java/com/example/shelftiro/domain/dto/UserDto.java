@@ -16,12 +16,13 @@ public class UserDto {
 
     private Long id;
 
-
     private String name;
-
 
     private String email;
 
+    private Integer age;
 
-    private LocalDate createdDate = LocalDate.now();
+    private LocalDate createdDate;
+
+
 }

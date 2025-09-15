@@ -4,7 +4,9 @@ import com.example.shelftiro.domain.dto.LoanDto;
 import com.example.shelftiro.domain.entities.LoanEntity;
 import com.example.shelftiro.mappers.LoanMapper;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class LoanMapperImpl implements LoanMapper <LoanEntity, LoanDto> {
 
     private ModelMapper modelMapper;

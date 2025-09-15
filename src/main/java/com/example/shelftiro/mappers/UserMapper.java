@@ -2,7 +2,7 @@ package com.example.shelftiro.mappers;
 
 public interface UserMapper <A,B> {
 
-    B mapToUserEntity(A a);
+    B mapToUserDto(A a);
 
     A mapFromUserDto(B b);
 }

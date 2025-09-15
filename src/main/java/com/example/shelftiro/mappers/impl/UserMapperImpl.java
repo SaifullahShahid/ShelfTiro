@@ -4,7 +4,9 @@ import com.example.shelftiro.domain.dto.UserDto;
 import com.example.shelftiro.domain.entities.UserEntity;
 import com.example.shelftiro.mappers.UserMapper;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapperImpl implements UserMapper <UserEntity, UserDto> {
 
     private ModelMapper modelMapper;
@@ -15,7 +17,7 @@ public class UserMapperImpl implements UserMapper <UserEntity, UserDto> {
 
 
     @Override
-    public UserDto mapToUserEntity(UserEntity userEntity) {
+    public UserDto mapToUserDto(UserEntity userEntity) {
         return modelMapper.map(userEntity, UserDto.class);
     }
 

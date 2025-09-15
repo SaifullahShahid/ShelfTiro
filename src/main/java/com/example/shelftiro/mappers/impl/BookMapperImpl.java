@@ -5,7 +5,9 @@ import com.example.shelftiro.domain.dto.LoanDto;
 import com.example.shelftiro.domain.entities.BookEntity;
 import com.example.shelftiro.mappers.BookMapper;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BookMapperImpl implements BookMapper<BookEntity, BookDto> {
 
     private ModelMapper modelMapper;
