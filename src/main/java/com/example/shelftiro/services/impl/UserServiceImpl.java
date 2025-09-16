@@ -43,13 +43,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserEntity> fullUpdateUser(Long id, UserEntity userEntity) {
-        Optional<UserEntity> updatedUser= userRepository.findById(id);
-        if(updatedUser.isPresent()){
-            userEntity.setId(id);
-            userEntity.setCreatedDate(updatedUser.get().getCreatedDate());
-            return Optional.of(userRepository.save(userEntity));
-        }
-        return Optional.empty();
+        return userRepository.findById(id).map(existingUser -> {
+            existingUser.setName(userEntity.getName());
+            existingUser.setEmail(userEntity.getEmail());
+            existingUser.setAge(userEntity.getAge());
+            return userRepository.save(existingUser);
+        });
+    }
 
+    @Override
+    public Optional<UserEntity> partialUpdateUser(Long id, UserEntity userEntity) {
+        return userRepository.findById(id).map(existingUser -> {
+            Optional.ofNullable(userEntity.getName()).ifPresent(existingUser::setName);
+            Optional.ofNullable(userEntity.getEmail()).ifPresent(existingUser::setEmail);
+            Optional.ofNullable(userEntity.getAge()).ifPresent(existingUser::setAge);
+
+            return userRepository.save(existingUser);
+        });
     }
 }

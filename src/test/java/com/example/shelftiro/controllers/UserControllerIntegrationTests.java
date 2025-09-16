@@ -169,6 +169,50 @@ public class UserControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.createdDate").exists()
         );
     }
+    @Test
+    public void testThatPartialUpdateUserSuccessfullyReturnsHttp200IsOk() throws Exception{
+        UserEntity userEntityA = TestDataUtil.createTestUserEntityA();
+        UserEntity savedUserEntityA =  userService.createUser(userEntityA);
+        savedUserEntityA.setName("TestUpdate");
+        savedUserEntityA.setEmail(null);
+        savedUserEntityA.setAge(null);
+        String userJson = objectMapper.writeValueAsString(savedUserEntityA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/api/users/"+savedUserEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+    @Test
+    public void testThatPartialUpdateUserSuccessfullyReturnsUpdatedUser() throws Exception{
+        UserEntity userEntityA = TestDataUtil.createTestUserEntityA();
+        UserEntity savedUserEntityA =  userService.createUser(userEntityA);
+        savedUserEntityA.setName("TestUpdate");
+        savedUserEntityA.setEmail(null);
+        savedUserEntityA.setAge(null);
+        String userJson = objectMapper.writeValueAsString(savedUserEntityA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/api/users/"+savedUserEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.name").value("TestUpdate")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.email").value("saif@gmail.com")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.age").value(21)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.createdDate").exists()
+        );
+    }
 
 
 }

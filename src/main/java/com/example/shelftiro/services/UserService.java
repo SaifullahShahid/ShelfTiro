@@ -18,4 +18,6 @@ public interface UserService {
 
     Optional<UserEntity> fullUpdateUser(Long id, UserEntity userEntity);
 
+    Optional<UserEntity> partialUpdateUser(Long id, UserEntity userEntity);
+
 }

@@ -47,9 +47,19 @@ public class UserController {
     }
 
     @PutMapping(path = "/users/{id}")
-    public ResponseEntity<UserDto> fullUpdateUser (@PathVariable("id") Long id, @RequestBody UserDto userDto){
+    public ResponseEntity<UserDto> fullUpdateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto){
         UserEntity userEntity = userMapper.mapFromUserDto(userDto);
         Optional<UserEntity> updatedUser = userService.fullUpdateUser(id,userEntity);
+        if (updatedUser.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(userMapper.mapToUserDto(updatedUser.get()),HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "/users/{id}")
+    public ResponseEntity<UserDto> partialUpdateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto){
+        UserEntity userEntity = userMapper.mapFromUserDto(userDto);
+        Optional<UserEntity> updatedUser = userService.partialUpdateUser(id,userEntity);
         if (updatedUser.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
