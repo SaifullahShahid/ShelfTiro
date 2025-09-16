@@ -1,6 +1,10 @@
 package com.example.shelftiro.services;
 
+import com.example.shelftiro.domain.dto.UserDto;
 import com.example.shelftiro.domain.entities.UserEntity;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -8,4 +12,8 @@ public interface UserService {
 
     boolean deleteUser(Long id);
 
+    List<UserEntity> listUsers();
+
+
+    Optional<UserEntity> listUserById(Long id);
 }

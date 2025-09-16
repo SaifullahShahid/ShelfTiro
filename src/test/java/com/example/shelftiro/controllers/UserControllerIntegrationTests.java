@@ -85,6 +85,47 @@ public class UserControllerIntegrationTests {
                 MockMvcResultMatchers.status().isNoContent()
         );
 
-
     }
+    @Test
+    public void testThatListUsersSuccessfullyReturnsAllUsers() throws Exception {
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testThatlistUserByIdSuccessfullyReturnsHttp404WhenNoUserIsFound() throws Exception{
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/users/-1")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    public void testThatListUserByIdSuccessfullyReturnsDesiredUser() throws Exception {
+        UserEntity userEntityA = TestDataUtil.createTestUserEntityA();
+        UserEntity savedUserEntityA = userService.createUser(userEntityA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/users/"+savedUserEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.name").value("Saifullah Shahid")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.email").value("saif@gmail.com")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.age").value(21)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.createdDate").exists()
+        );
+    }
+
 }

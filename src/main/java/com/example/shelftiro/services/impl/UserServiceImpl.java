@@ -4,7 +4,7 @@ import com.example.shelftiro.domain.entities.UserEntity;
 import com.example.shelftiro.repositories.UserRepository;
 import com.example.shelftiro.services.UserService;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,11 +25,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean deleteUser(Long id) {
-        Optional <UserEntity> userOpt = userRepository.findById(id);
-        if (userOpt.isPresent()){
+        if (userRepository.existsById(id)){
             userRepository.deleteById(id);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<UserEntity> listUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public Optional<UserEntity> listUserById(Long id) {
+        return userRepository.findById(id);
     }
 }

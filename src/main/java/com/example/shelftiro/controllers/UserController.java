@@ -8,13 +8,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
+
 @RestController
 @RequestMapping(path = "/api")
 public class UserController {
 
     private final UserService userService;
     private final UserMapper<UserEntity,UserDto> userMapper;
-
     public UserController(UserService userService, UserMapper<UserEntity,UserDto> userMapper){
         this.userService = userService;
         this.userMapper = userMapper;
@@ -27,6 +30,23 @@ public class UserController {
         return new ResponseEntity<>(userMapper.mapToUserDto(savedUserEntity), HttpStatus.CREATED);
     }
 
+    @GetMapping(path = "/users")
+    public List<UserDto> listUsers(){
+        return userService.listUsers().stream()
+                .map(userMapper::mapToUserDto)
+                .toList();
+    }
+
+    @GetMapping(path = "/users/{id}")
+    public ResponseEntity<UserDto> listUserById(@PathVariable("id") Long id){
+        Optional<UserEntity> foundUser = userService.listUserById(id);
+        if(foundUser.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(userMapper.mapToUserDto(foundUser.get()),HttpStatus.OK);
+    }
+
+
     @DeleteMapping(path="/users/{id}")
     public ResponseEntity <Void> deleteUser(@PathVariable("id") Long id){
         boolean deleted = userService.deleteUser(id);
@@ -34,6 +54,5 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
 }
