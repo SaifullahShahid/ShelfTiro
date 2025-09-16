@@ -127,5 +127,48 @@ public class UserControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.createdDate").exists()
         );
     }
+    @Test
+    public void testThatFullUpdateUserSuccessfullyReturnsHttp200IsOk() throws Exception{
+        UserEntity userEntityA = TestDataUtil.createTestUserEntityA();
+        userService.createUser(userEntityA);
+        userEntityA.setName("TestUpdate");
+        String userJson = objectMapper.writeValueAsString(userEntityA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/users/"+userEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+    @Test
+    public void testThatFullUpdateUserSuccessfullyReturnsUpdatedUser() throws Exception {
+        UserEntity userEntityA = TestDataUtil.createTestUserEntityA();
+        userService.createUser(userEntityA);
+        userEntityA.setName("TestName");
+        userEntityA.setEmail("TestEmail@test.com");
+        userEntityA.setAge(1000);
+        String userJson = objectMapper.writeValueAsString(userEntityA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/users/"+userEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.name").value("TestName")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.email").value("TestEmail@test.com")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.age").value(1000)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.createdDate").exists()
+        );
+    }
+
 
 }
