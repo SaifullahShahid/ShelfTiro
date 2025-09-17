@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @Builder
 public class LoanDto {
 
-
     private Long id;
 
     private LocalDate loanDate;
@@ -23,9 +22,7 @@ public class LoanDto {
 
     private LocalDate returnDate;
 
-
     private UserDto userDto;
-
 
     private BookDto bookDto;
 }

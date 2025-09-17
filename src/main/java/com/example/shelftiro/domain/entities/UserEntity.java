@@ -33,4 +33,6 @@ public class UserEntity {
     @CreationTimestamp
     private LocalDate createdDate;
 
+
+
 }

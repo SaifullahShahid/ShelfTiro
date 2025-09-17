@@ -1,6 +1,5 @@
 package com.example.shelftiro.controllers;
 
-
 import com.example.shelftiro.TestDataUtil;
 import com.example.shelftiro.domain.dto.UserDto;
 import com.example.shelftiro.domain.entities.UserEntity;
