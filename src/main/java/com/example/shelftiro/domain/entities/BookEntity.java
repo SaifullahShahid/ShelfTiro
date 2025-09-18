@@ -15,17 +15,21 @@ import lombok.NoArgsConstructor;
 public class BookEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_id")
+    private Long id;
+
+    @Column(name = "book_isbn",nullable = false)
     private String isbn;
 
-    @Column(nullable = false)
+    @Column(name = "book_title", nullable = false)
     private String title;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "author_id")
+    @Column(name = "book_genre",nullable = false)
+    private String genre;
+
+    @ManyToOne()
+    @JoinColumn(name = "author_id", nullable = false,
+                foreignKey = @ForeignKey(name = "fk_book_author"))
     private AuthorEntity authorEntity;
-
-
-
-
-
 }

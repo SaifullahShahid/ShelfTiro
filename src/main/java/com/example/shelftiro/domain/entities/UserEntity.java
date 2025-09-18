@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,20 +20,22 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "user_name",nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "user_email",nullable = false)
     private String email;
 
+    @Column(name = "user_age")
     private Integer age;
 
-    @Column(name = "joinDate",nullable = false, updatable = false)
+    @Column(name = "join_date",nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDate createdDate;
 
-
-
+    @OneToMany(mappedBy = "userEntity")
+    private List<LoanEntity> loansEntity;
 }

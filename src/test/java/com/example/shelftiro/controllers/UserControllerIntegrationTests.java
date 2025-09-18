@@ -117,7 +117,7 @@ public class UserControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.id").isNumber()
 
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.name").value("Saifullah Shahid")
+                MockMvcResultMatchers.jsonPath("$.name").value("Saif")
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.email").value("saif@gmail.com")
         ).andExpect(

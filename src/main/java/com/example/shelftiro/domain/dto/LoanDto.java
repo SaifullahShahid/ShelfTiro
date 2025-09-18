@@ -24,5 +24,5 @@ public class LoanDto {
 
     private UserDto userDto;
 
-    private BookDto bookDto;
+    private BookDto book;
 }
