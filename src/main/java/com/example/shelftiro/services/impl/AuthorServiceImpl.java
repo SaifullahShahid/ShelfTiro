@@ -1,6 +1,7 @@
 package com.example.shelftiro.services.impl;
 
 import com.example.shelftiro.domain.entities.AuthorEntity;
+import com.example.shelftiro.domain.entities.UserEntity;
 import com.example.shelftiro.repositories.AuthorRepository;
 import com.example.shelftiro.services.AuthorService;
 import org.springframework.http.HttpStatus;
@@ -41,9 +42,30 @@ public class AuthorServiceImpl implements AuthorService {
             return existingAuthor.get();
         }
         else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author by this id does not exist!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author does not exist by this id!");
         }
 
+    }
+    @Override
+    public AuthorEntity fullUpdateAuthor(Long id, AuthorEntity autherEntity) {
+        return authorRepository.findById(id).map(existingAuthor -> {
+            existingAuthor.setName(autherEntity.getName());
+            existingAuthor.setBirthDate(autherEntity.getBirthDate());
+            existingAuthor.setCountryOrigin(autherEntity.getCountryOrigin());
+            return authorRepository.save(existingAuthor);
+        }).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Author does not exist by this id!"));
+    }
+
+    @Override
+    public AuthorEntity partialUpdateAuthor(Long id, AuthorEntity authorEntity) {
+        return  authorRepository.findById(id).map(existingAuthor -> {
+            Optional.ofNullable(authorEntity.getName()).ifPresent(existingAuthor::setName);
+            Optional.ofNullable(authorEntity.getBirthDate()).ifPresent(existingAuthor::setBirthDate);
+            Optional.ofNullable(authorEntity.getCountryOrigin()).ifPresent(existingAuthor::setCountryOrigin);
+            return authorRepository.save(existingAuthor);
+        }).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Author does not exist by this id!"));
     }
 
 }

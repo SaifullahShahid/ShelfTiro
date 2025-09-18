@@ -15,6 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
+
 @SpringBootTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -33,12 +35,12 @@ public class AuthorControllerIntegrationTests {
     @Test
     public void testThatCreateAuthorSuccessfullyReturnsHttp201Created() throws Exception{
         AuthorEntity authorEntityA = TestDataUtil.createTestAuthorEntityA();
-        String userJson = objectMapper.writeValueAsString(authorEntityA);
+        String authorJson = objectMapper.writeValueAsString(authorEntityA);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/authors")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
+                        .content(authorJson)
         ).andExpect(
                 MockMvcResultMatchers.status().isCreated()
         );
@@ -128,6 +130,73 @@ public class AuthorControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.birthDate").value("1965-07-31")
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.countryOrigin").value("United Kingdom")
+        );
+    }
+    @Test
+    public void testThatFullUpdateAuthorSuccessfullyReturnsHttp200Ok() throws Exception{
+        AuthorEntity authorEntityA = TestDataUtil.createTestAuthorEntityA();
+        authorService.createAuthor(authorEntityA);
+        authorEntityA.setName("TestName");
+        authorEntityA.setBirthDate(LocalDate.parse("2025-09-15"));
+        authorEntityA.setCountryOrigin("TestCountry");
+
+        String authorJson = objectMapper.writeValueAsString(authorEntityA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/authors/"+authorEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authorJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+    @Test
+    public void testThatFullUpdateAuthorSuccessfullyReturnsUpdatedAuthor() throws Exception{
+        AuthorEntity authorEntityA = TestDataUtil.createTestAuthorEntityA();
+        authorService.createAuthor(authorEntityA);
+        authorEntityA.setName("TestName");
+        authorEntityA.setBirthDate(LocalDate.parse("2025-09-15"));
+        authorEntityA.setCountryOrigin("TestCountry");
+
+        String authorJson = objectMapper.writeValueAsString(authorEntityA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/authors/"+authorEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authorJson)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.name").value("TestName")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.birthDate").value("2025-09-15")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.countryOrigin").value("TestCountry")
+        );
+    }
+    @Test
+    public void testThatpartialUpdateAuthorSuccessfullyReturnsUpdatedAuthor() throws Exception{
+        AuthorEntity authorEntityA = TestDataUtil.createTestAuthorEntityA();
+        authorService.createAuthor(authorEntityA);
+        authorEntityA.setName("TestName");
+        authorEntityA.setBirthDate(LocalDate.parse("2025-09-15"));
+
+        String authorJson = objectMapper.writeValueAsString(authorEntityA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/authors/"+authorEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authorJson)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.name").value("TestName")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.birthDate").value("2025-09-15")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.countryOrigin").value(authorEntityA.getCountryOrigin())
         );
     }
 

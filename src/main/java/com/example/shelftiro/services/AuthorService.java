@@ -10,4 +10,8 @@ public interface AuthorService {
     List <AuthorEntity> listAuthors();
 
     AuthorEntity listAuthorById(Long id);
+
+    AuthorEntity fullUpdateAuthor(Long id, AuthorEntity autherEntity);
+
+    AuthorEntity partialUpdateAuthor(Long id, AuthorEntity authorEntity);
 }

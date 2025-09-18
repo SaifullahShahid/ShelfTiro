@@ -42,4 +42,25 @@ public class AuthorController {
     public ResponseEntity <AuthorDto> getAuthorById(@PathVariable("id") Long id){
         return new ResponseEntity<>(authorMapper.mapToAuthorDto(authorService.listAuthorById(id)),HttpStatus.OK);
     }
+
+    @PutMapping(path = "/authors/{id}")
+    public ResponseEntity <AuthorDto> fullUpdateAuthor(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody AuthorDto authorDto){
+
+        AuthorEntity authorEntity = authorMapper.mapFromAuthorDto(authorDto);
+        return new ResponseEntity<>(authorMapper.mapToAuthorDto(authorService.fullUpdateAuthor(id,authorEntity)),
+                HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "/authors/{id}")
+    public ResponseEntity <AuthorDto> partialUpdateAuthor(
+            @PathVariable("id") Long id,
+            @RequestBody AuthorDto authorDto){
+
+        AuthorEntity authorEntity = authorMapper.mapFromAuthorDto(authorDto);
+        return new ResponseEntity<>(authorMapper.mapToAuthorDto(authorService.partialUpdateAuthor(id,authorEntity)),
+                HttpStatus.OK);
+    }
+
 }
