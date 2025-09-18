@@ -102,4 +102,33 @@ public class AuthorControllerIntegrationTests {
                 MockMvcResultMatchers.status().isBadRequest()
         );
     }
+    @Test
+    public void testThatListAuthorsSuccessfullyReturnsHttp200() throws Exception{
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/authors")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+    @Test
+    public void testThatListAuthorByIdSuccessfullyReturnsDesiredAuthor() throws Exception{
+        AuthorEntity authorEntityA = TestDataUtil.createTestAuthorEntityA();
+        authorService.createAuthor(authorEntityA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/authors/"+authorEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.name").value("J.K. Rowling")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.birthDate").value("1965-07-31")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.countryOrigin").value("United Kingdom")
+        );
+    }
+
 }

@@ -3,7 +3,10 @@ package com.example.shelftiro.services.impl;
 import com.example.shelftiro.domain.entities.UserEntity;
 import com.example.shelftiro.repositories.UserRepository;
 import com.example.shelftiro.services.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -37,8 +40,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserEntity> listUserById(Long id) {
-        return userRepository.findById(id);
+    public UserEntity listUserById(Long id) {
+        Optional<UserEntity> existingUser = userRepository.findById(id);
+        if(existingUser.isPresent()){
+            return existingUser.get();
+
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User by this id does not exist!");
+        }
     }
 
     @Override

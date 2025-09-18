@@ -39,11 +39,7 @@ public class UserController {
 
     @GetMapping(path = "/users/{id}")
     public ResponseEntity<UserDto> listUserById(@PathVariable("id") Long id){
-        Optional<UserEntity> foundUser = userService.listUserById(id);
-        if(foundUser.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(userMapper.mapToUserDto(foundUser.get()),HttpStatus.OK);
+        return new ResponseEntity<>(userMapper.mapToUserDto(userService.listUserById(id)),HttpStatus.OK);
     }
 
     @PutMapping(path = "/users/{id}")

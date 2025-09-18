@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
@@ -24,4 +27,23 @@ public class AuthorServiceImpl implements AuthorService {
         }
         return authorRepository.save(authorEntity);
     }
+
+    @Override
+    public List<AuthorEntity> listAuthors() {
+        return authorRepository.findAll();
+    }
+
+    @Override
+    public AuthorEntity listAuthorById(Long id) {
+        Optional <AuthorEntity> existingAuthor = authorRepository.findById(id);
+
+        if (existingAuthor.isPresent()) {
+            return existingAuthor.get();
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author by this id does not exist!");
+        }
+
+    }
+
 }

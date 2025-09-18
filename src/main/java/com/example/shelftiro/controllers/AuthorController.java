@@ -9,10 +9,9 @@ import com.example.shelftiro.services.AuthorService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -30,5 +29,17 @@ public class AuthorController {
     public ResponseEntity<AuthorDto> createAuthor(@Valid @RequestBody AuthorDto authorDto){
         AuthorEntity savedAuthor = authorService.createAuthor(authorMapper.mapFromAuthorDto(authorDto));
         return new ResponseEntity<>(authorMapper.mapToAuthorDto(savedAuthor), HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "/authors")
+    public List <AuthorDto> getAuthors(){
+        return authorService.listAuthors().stream()
+                .map(authorMapper::mapToAuthorDto)
+                .toList();
+    }
+
+    @GetMapping(path = "/authors/{id}")
+    public ResponseEntity <AuthorDto> getAuthorById(@PathVariable("id") Long id){
+        return new ResponseEntity<>(authorMapper.mapToAuthorDto(authorService.listAuthorById(id)),HttpStatus.OK);
     }
 }

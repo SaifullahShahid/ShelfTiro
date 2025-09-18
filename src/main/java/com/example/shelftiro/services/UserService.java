@@ -1,5 +1,6 @@
 package com.example.shelftiro.services;
 
+import com.example.shelftiro.domain.entities.AuthorEntity;
 import com.example.shelftiro.domain.entities.UserEntity;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface UserService {
     List<UserEntity> listUsers();
 
 
-    Optional<UserEntity> listUserById(Long id);
+    UserEntity listUserById(Long id);
 
     Optional<UserEntity> fullUpdateUser(Long id, UserEntity userEntity);
 
