@@ -199,5 +199,27 @@ public class AuthorControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.countryOrigin").value(authorEntityA.getCountryOrigin())
         );
     }
+    @Test
+    public void testThatDeleteAuthorSuccessfullyReturnsHttp200IsOK() throws Exception{
+        AuthorEntity authorEntityA = TestDataUtil.createTestAuthorEntityA();
+        authorService.createAuthor(authorEntityA);
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/authors/"+authorEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+    @Test
+    public void testThatDeleteAuthorSuccessfullyReturnsHttp404NotFoundUponInvalidId() throws Exception{
+        AuthorEntity authorEntityA = TestDataUtil.createTestAuthorEntityA();
+        authorService.createAuthor(authorEntityA);
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/authors/-1")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
 
 }

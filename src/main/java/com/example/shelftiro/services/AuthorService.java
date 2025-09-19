@@ -14,4 +14,6 @@ public interface AuthorService {
     AuthorEntity fullUpdateAuthor(Long id, AuthorEntity autherEntity);
 
     AuthorEntity partialUpdateAuthor(Long id, AuthorEntity authorEntity);
+
+    void deleteUser(Long id);
 }

@@ -68,4 +68,14 @@ public class AuthorServiceImpl implements AuthorService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Author does not exist by this id!"));
     }
 
+    @Override
+    public void deleteUser(Long id) {
+        if (authorRepository.existsById(id)){
+            authorRepository.deleteById(id);
+        }
+        else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author by this id does not exist!");
+        }
+    }
+
 }

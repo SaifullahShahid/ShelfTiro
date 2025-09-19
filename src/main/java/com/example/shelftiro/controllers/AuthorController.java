@@ -62,4 +62,9 @@ public class AuthorController {
                 HttpStatus.OK);
     }
 
+    @DeleteMapping(path="/authors/{id}")
+    public void deleteAuthor(@PathVariable("id") Long id){
+        authorService.deleteUser(id);
+    }
+
 }
