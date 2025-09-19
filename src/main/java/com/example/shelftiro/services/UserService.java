@@ -10,15 +10,15 @@ public interface UserService {
 
     UserEntity createUser(UserEntity userEntity);
 
-    boolean deleteUser(Long id);
+    void deleteUser(Long id);
 
     List<UserEntity> listUsers();
 
 
     UserEntity listUserById(Long id);
 
-    Optional<UserEntity> fullUpdateUser(Long id, UserEntity userEntity);
+    UserEntity fullUpdateUser(Long id, UserEntity userEntity);
 
-    Optional<UserEntity> partialUpdateUser(Long id, UserEntity userEntity);
+    UserEntity partialUpdateUser(Long id, UserEntity userEntity);
 
 }

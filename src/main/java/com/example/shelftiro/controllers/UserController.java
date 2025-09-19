@@ -4,6 +4,7 @@ import com.example.shelftiro.domain.dto.UserDto;
 import com.example.shelftiro.domain.entities.UserEntity;
 import com.example.shelftiro.mappers.UserMapper;
 import com.example.shelftiro.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/users")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto){
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto){
         UserEntity userEntity = userMapper.mapFromUserDto(userDto);
         UserEntity savedUserEntity = userService.createUser(userEntity);
         return new ResponseEntity<>(userMapper.mapToUserDto(savedUserEntity), HttpStatus.CREATED);
@@ -43,32 +44,22 @@ public class UserController {
     }
 
     @PutMapping(path = "/users/{id}")
-    public ResponseEntity<UserDto> fullUpdateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto){
+    public ResponseEntity<UserDto> fullUpdateUser(@PathVariable("id") Long id,
+                                                  @Valid @RequestBody UserDto userDto){
         UserEntity userEntity = userMapper.mapFromUserDto(userDto);
-        Optional<UserEntity> updatedUser = userService.fullUpdateUser(id,userEntity);
-        if (updatedUser.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(userMapper.mapToUserDto(updatedUser.get()),HttpStatus.OK);
+        return new ResponseEntity<>(userMapper.mapToUserDto(userService.fullUpdateUser(id,userEntity)),HttpStatus.OK);
+
     }
 
     @PatchMapping(path = "/users/{id}")
     public ResponseEntity<UserDto> partialUpdateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto){
         UserEntity userEntity = userMapper.mapFromUserDto(userDto);
-        Optional<UserEntity> updatedUser = userService.partialUpdateUser(id,userEntity);
-        if (updatedUser.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(userMapper.mapToUserDto(updatedUser.get()),HttpStatus.OK);
+        return new ResponseEntity<>(userMapper.mapToUserDto(userService.partialUpdateUser(id,userEntity)),HttpStatus.OK);
     }
 
 
     @DeleteMapping(path="/users/{id}")
-    public ResponseEntity <Void> deleteUser(@PathVariable("id") Long id){
-        boolean deleted = userService.deleteUser(id);
-        if(!deleted){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public void deleteUser(@PathVariable("id") Long id){
+        userService.deleteUser(id);
     }
 }

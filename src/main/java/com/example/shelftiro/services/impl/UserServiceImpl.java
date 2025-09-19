@@ -5,6 +5,7 @@ import com.example.shelftiro.repositories.UserRepository;
 import com.example.shelftiro.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -26,12 +27,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteUser(Long id) {
+    public void deleteUser(Long id) {
         if (userRepository.existsById(id)){
             userRepository.deleteById(id);
-            return true;
         }
-        return false;
+        else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User by this id does not exist!");
+        }
     }
 
     @Override
@@ -44,7 +46,6 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> existingUser = userRepository.findById(id);
         if(existingUser.isPresent()){
             return existingUser.get();
-
         }
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User by this id does not exist!");
@@ -52,23 +53,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserEntity> fullUpdateUser(Long id, UserEntity userEntity) {
+    public UserEntity fullUpdateUser(Long id, UserEntity userEntity) {
         return userRepository.findById(id).map(existingUser -> {
             existingUser.setName(userEntity.getName());
             existingUser.setEmail(userEntity.getEmail());
             existingUser.setAge(userEntity.getAge());
             return userRepository.save(existingUser);
-        });
+        }).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "User by this id does not exist!"));
     }
 
     @Override
-    public Optional<UserEntity> partialUpdateUser(Long id, UserEntity userEntity) {
-        return userRepository.findById(id).map(existingUser -> {
-            Optional.ofNullable(userEntity.getName()).ifPresent(existingUser::setName);
-            Optional.ofNullable(userEntity.getEmail()).ifPresent(existingUser::setEmail);
-            Optional.ofNullable(userEntity.getAge()).ifPresent(existingUser::setAge);
+    public UserEntity partialUpdateUser(Long id, UserEntity userEntity) {
+        UserEntity existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User by this id does not exist!"));
 
-            return userRepository.save(existingUser);
-        });
+        if (userEntity.getName() != null && !userEntity.getName().isBlank()) {
+            existingUser.setName(userEntity.getName());
+        }
+
+        if (userEntity.getEmail() != null && !userEntity.getEmail().isBlank()) {
+            existingUser.setEmail(userEntity.getEmail());
+        }
+
+        if (userEntity.getAge() != null) {
+            existingUser.setAge(userEntity.getAge());
+        }
+        return userRepository.save(existingUser);
     }
+
 }

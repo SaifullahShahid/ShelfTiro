@@ -81,7 +81,7 @@ public class UserControllerIntegrationTests {
                 MockMvcRequestBuilders.delete("/api/users/"+ savedUserEntityA.getId())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
-                MockMvcResultMatchers.status().isNoContent()
+                MockMvcResultMatchers.status().isOk()
         );
 
     }
