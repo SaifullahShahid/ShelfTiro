@@ -1,8 +1,8 @@
 package com.example.shelftiro.mappers;
 
-public interface BookMapper <A,B> {
+public interface BookMapper <A,B,C> {
 
-    B mapToBookEntity(A a);
+    C mapToBookResponseDto(A a);
 
-    A mapFromBookDto(B b);
+    A mapFromBookRequestDto(B b);
 }

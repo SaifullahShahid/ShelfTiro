@@ -1,27 +1,30 @@
 package com.example.shelftiro.mappers.impl;
 
-import com.example.shelftiro.domain.dto.BookDto;
-import com.example.shelftiro.domain.dto.LoanDto;
+import com.example.shelftiro.domain.dto.BookRequestDto;
+import com.example.shelftiro.domain.dto.BookResponseDto;
 import com.example.shelftiro.domain.entities.BookEntity;
 import com.example.shelftiro.mappers.BookMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BookMapperImpl implements BookMapper<BookEntity, BookDto> {
+public class BookMapperImpl implements BookMapper<BookEntity, BookRequestDto, BookResponseDto> {
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public BookMapperImpl(ModelMapper modelMapper){
         this.modelMapper = modelMapper;
     }
     @Override
-    public BookDto mapToBookEntity(BookEntity bookEntity) {
-        return modelMapper.map(bookEntity, BookDto.class);
+    public BookResponseDto mapToBookResponseDto(BookEntity bookEntity) {
+        return modelMapper.map(bookEntity, BookResponseDto.class);
     }
 
     @Override
-    public BookEntity mapFromBookDto(BookDto bookDto) {
-        return modelMapper.map(bookDto, BookEntity.class);
+    public BookEntity mapFromBookRequestDto(BookRequestDto bookRequestDto) {
+        return modelMapper.map(bookRequestDto, BookEntity.class);
     }
+
+
+
 }

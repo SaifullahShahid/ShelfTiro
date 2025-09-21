@@ -1,8 +1,8 @@
 package com.example.shelftiro.mappers;
 
-public interface AuthorMapper <A,B> {
+public interface AuthorMapper <A,B,C> {
 
-    B mapToAuthorDto(A a);
+    B mapToAuthorResponseDto(A a);
 
-    A mapFromAuthorDto(B b);
+    A mapFromAuthorRequestDto(C c);
 }

@@ -1,13 +1,14 @@
 package com.example.shelftiro.mappers.impl;
 
-import com.example.shelftiro.domain.dto.AuthorDto;
+import com.example.shelftiro.domain.dto.AuthorRequestDto;
+import com.example.shelftiro.domain.dto.AuthorResponseDto;
 import com.example.shelftiro.domain.entities.AuthorEntity;
 import com.example.shelftiro.mappers.AuthorMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthorMapperImpl implements AuthorMapper<AuthorEntity, AuthorDto> {
+public class AuthorMapperImpl implements AuthorMapper<AuthorEntity, AuthorResponseDto,AuthorRequestDto> {
 
     private final ModelMapper modelMapper;
 
@@ -15,12 +16,12 @@ public class AuthorMapperImpl implements AuthorMapper<AuthorEntity, AuthorDto> {
         this.modelMapper = modelMapper;
     }
     @Override
-    public AuthorDto mapToAuthorDto(AuthorEntity authorEntity) {
-        return modelMapper.map(authorEntity, AuthorDto.class);
+    public AuthorResponseDto mapToAuthorResponseDto(AuthorEntity authorEntity) {
+        return modelMapper.map(authorEntity, AuthorResponseDto.class);
     }
 
     @Override
-    public AuthorEntity mapFromAuthorDto(AuthorDto authorDto) {
-        return modelMapper.map(authorDto, AuthorEntity.class);
+    public AuthorEntity mapFromAuthorRequestDto(AuthorRequestDto authorRequestDto) {
+        return modelMapper.map(authorRequestDto, AuthorEntity.class);
     }
 }

@@ -14,16 +14,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthorDto {
+public class AuthorResponseDto {
 
     private Long id;
 
-    @NotBlank(message = "Author name is required")
     private String name;
 
     private LocalDate birthDate;
 
     private String countryOrigin;
 
-    private List<BookDto> books;
+    private List<BookRequestDto> books;
 }

@@ -1,5 +1,6 @@
 package com.example.shelftiro.domain.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,15 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BookDto {
+public class BookRequestDto {
 
-    private Long id;
-
+    @NotBlank(message = "Book ISBN must not be blank!")
     private String isbn;
 
+    @NotBlank(message = "Book title must not be blank!")
     private String title;
 
     private String genre;
 
-    private AuthorDto author;
 }

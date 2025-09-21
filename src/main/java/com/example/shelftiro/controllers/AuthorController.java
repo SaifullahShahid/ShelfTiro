@@ -1,6 +1,7 @@
 package com.example.shelftiro.controllers;
 
-import com.example.shelftiro.domain.dto.AuthorDto;
+import com.example.shelftiro.domain.dto.AuthorRequestDto;
+import com.example.shelftiro.domain.dto.AuthorResponseDto;
 import com.example.shelftiro.domain.entities.AuthorEntity;
 import com.example.shelftiro.mappers.AuthorMapper;
 import com.example.shelftiro.services.AuthorService;
@@ -17,48 +18,49 @@ import java.util.List;
 public class AuthorController {
 
     private final AuthorService authorService;
-    private final AuthorMapper<AuthorEntity, AuthorDto> authorMapper;
+    private final AuthorMapper<AuthorEntity, AuthorResponseDto, AuthorRequestDto> authorMapper;
 
-    public AuthorController(AuthorService authorService,AuthorMapper<AuthorEntity,AuthorDto> authorMapper){
+    public AuthorController(AuthorService authorService,
+                            AuthorMapper<AuthorEntity, AuthorResponseDto,AuthorRequestDto> authorMapper){
         this.authorService = authorService;
         this.authorMapper = authorMapper;
     }
 
     @PostMapping(path = "/authors")
-    public ResponseEntity<AuthorDto> createAuthor(@Valid @RequestBody AuthorDto authorDto){
-        AuthorEntity savedAuthor = authorService.createAuthor(authorMapper.mapFromAuthorDto(authorDto));
-        return new ResponseEntity<>(authorMapper.mapToAuthorDto(savedAuthor), HttpStatus.CREATED);
+    public ResponseEntity<AuthorResponseDto> createAuthor(@Valid @RequestBody AuthorRequestDto authorRequestDto){
+        AuthorEntity savedAuthor = authorService.createAuthor(authorMapper.mapFromAuthorRequestDto(authorRequestDto));
+        return new ResponseEntity<>(authorMapper.mapToAuthorResponseDto(savedAuthor), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/authors")
-    public List <AuthorDto> getAuthors(){
+    public List <AuthorResponseDto> getAuthors(){
         return authorService.listAuthors().stream()
-                .map(authorMapper::mapToAuthorDto)
+                .map(authorMapper::mapToAuthorResponseDto)
                 .toList();
     }
 
     @GetMapping(path = "/authors/{id}")
-    public ResponseEntity <AuthorDto> getAuthorById(@PathVariable("id") Long id){
-        return new ResponseEntity<>(authorMapper.mapToAuthorDto(authorService.listAuthorById(id)),HttpStatus.OK);
+    public ResponseEntity <AuthorResponseDto> getAuthorById(@PathVariable("id") Long id){
+        return new ResponseEntity<>(authorMapper.mapToAuthorResponseDto(authorService.listAuthorById(id)),HttpStatus.OK);
     }
 
     @PutMapping(path = "/authors/{id}")
-    public ResponseEntity <AuthorDto> fullUpdateAuthor(
+    public ResponseEntity <AuthorResponseDto> fullUpdateAuthor(
             @PathVariable("id") Long id,
-            @Valid @RequestBody AuthorDto authorDto){
+            @Valid @RequestBody AuthorRequestDto authorRequestDto){
 
-        AuthorEntity authorEntity = authorMapper.mapFromAuthorDto(authorDto);
-        return new ResponseEntity<>(authorMapper.mapToAuthorDto(authorService.fullUpdateAuthor(id,authorEntity)),
+        AuthorEntity authorEntity = authorMapper.mapFromAuthorRequestDto(authorRequestDto);
+        return new ResponseEntity<>(authorMapper.mapToAuthorResponseDto(authorService.fullUpdateAuthor(id,authorEntity)),
                 HttpStatus.OK);
     }
 
     @PatchMapping(path = "/authors/{id}")
-    public ResponseEntity <AuthorDto> partialUpdateAuthor(
+    public ResponseEntity <AuthorResponseDto> partialUpdateAuthor(
             @PathVariable("id") Long id,
-            @RequestBody AuthorDto authorDto){
+            @RequestBody AuthorRequestDto authorRequestDto){
 
-        AuthorEntity authorEntity = authorMapper.mapFromAuthorDto(authorDto);
-        return new ResponseEntity<>(authorMapper.mapToAuthorDto(authorService.partialUpdateAuthor(id,authorEntity)),
+        AuthorEntity authorEntity = authorMapper.mapFromAuthorRequestDto(authorRequestDto);
+        return new ResponseEntity<>(authorMapper.mapToAuthorResponseDto(authorService.partialUpdateAuthor(id,authorEntity)),
                 HttpStatus.OK);
     }
 

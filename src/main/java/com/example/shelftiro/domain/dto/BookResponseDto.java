@@ -4,23 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoanDto {
+public class BookResponseDto {
 
     private Long id;
 
-    private LocalDate loanDate;
+    private String isbn;
 
-    private LocalDate dueDate;
+    private String title;
 
-    private LocalDate returnDate;
+    private String genre;
 
-    private UserDto userDto;
-
-    private BookRequestDto book;
+    private AuthorRequestDto author;
 }
