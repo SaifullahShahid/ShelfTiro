@@ -5,9 +5,12 @@ import com.example.shelftiro.domain.entities.BookEntity;
 import com.example.shelftiro.repositories.AuthorRepository;
 import com.example.shelftiro.repositories.BookRepository;
 import com.example.shelftiro.services.BookService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.domain.Pageable;
+
 
 import java.util.List;
 
@@ -38,8 +41,44 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Page<BookEntity> listBooksByAuthorId(Long id, Pageable pageable) {
+        if(!authorRepository.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author does not exist by this id!");
+        }
+        return bookRepository.findByAuthorEntity_Id(id,pageable);
+
+    }
+
+    @Override
     public BookEntity listBookByIsbn(String isbn) {
-            return bookRepository.findByIsbn(isbn).orElseThrow(()->
+            return bookRepository.getByIsbn(isbn).orElseThrow(()->
                     new ResponseStatusException(HttpStatus.NOT_FOUND,"Book by this ISBN does not exist!"));
+    }
+
+    @Override
+    public Page<BookEntity> filterBooks(String isbn, String title, String genre, String authorName, Pageable pageable) {
+
+        if(isbn!=null){
+            return bookRepository.findByIsbn(isbn,pageable);
+        }
+        if(genre!=null&&authorName!=null){
+            return bookRepository.findByGenreIgnoreCaseAndAuthorEntity_NameIgnoreCase(genre,authorName,pageable);
+        }
+        if(title!=null&&authorName!=null){
+            return bookRepository.findByTitleIgnoreCaseOrAuthorEntity_NameIgnoreCase(title,authorName,pageable);
+        }
+        if(title!=null&&genre!=null){
+            return bookRepository.findByTitleIgnoreCaseAndGenreIgnoreCase(title,genre,pageable);
+        }
+        if(title!=null){
+            return bookRepository.findByTitleIgnoreCase(title,pageable);
+        }
+        if(genre!=null){
+            return bookRepository.findByGenreIgnoreCase(genre,pageable);
+        }
+        if(authorName!=null){
+            return bookRepository.findByAuthorEntity_NameIgnoreCase(authorName,pageable);
+        }
+        return bookRepository.findAll(pageable);
     }
 }
