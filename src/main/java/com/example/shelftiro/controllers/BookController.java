@@ -32,7 +32,8 @@ public class BookController {
                                                       @Valid @RequestBody BookRequestDto bookRequestDto){
         BookEntity bookEntity = bookMapper.mapFromBookRequestDto(bookRequestDto);
         return new ResponseEntity<>(
-                bookMapper.mapToBookResponseDto(bookService.createBook(id,bookEntity)), HttpStatus.CREATED);
+                bookMapper.mapToBookResponseDto(bookService.createBook(id,bookEntity)),
+                HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/books")
@@ -55,6 +56,15 @@ public class BookController {
     public Page<BookResponseDto> getBooksByAuthorId(@PathVariable("author_id")Long id, Pageable pageable){
         Page<BookEntity> books = bookService.listBooksByAuthorId(id,pageable);
         return books.map(bookMapper::mapToBookResponseDto);
+    }
+
+    @PatchMapping(path = "/authors/{author_id}/books")
+    public ResponseEntity<BookResponseDto> fullUpdateBook(@PathVariable("author_id")Long id,
+                                                          @Valid @RequestBody BookRequestDto bookRequestDto){
+        BookEntity bookEntity = bookMapper.mapFromBookRequestDto(bookRequestDto);
+        return new ResponseEntity<>(
+                bookMapper.mapToBookResponseDto(bookService.fullUpdateBook(id,bookEntity)),
+                HttpStatus.OK);
     }
 
 
