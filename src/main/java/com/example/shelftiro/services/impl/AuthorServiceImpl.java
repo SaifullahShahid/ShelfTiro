@@ -1,8 +1,9 @@
 package com.example.shelftiro.services.impl;
 
 import com.example.shelftiro.domain.entities.AuthorEntity;
-import com.example.shelftiro.domain.entities.UserEntity;
+import com.example.shelftiro.domain.entities.BookEntity;
 import com.example.shelftiro.repositories.AuthorRepository;
+import com.example.shelftiro.repositories.BookRepository;
 import com.example.shelftiro.services.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,11 @@ import java.util.Optional;
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
 
-    public AuthorServiceImpl(AuthorRepository authorRepository) {
+    public AuthorServiceImpl(AuthorRepository authorRepository,BookRepository bookRepository) {
         this.authorRepository = authorRepository;
+        this.bookRepository = bookRepository;
     }
 
     @Override
@@ -69,8 +72,17 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteAuthor(Long id) {
+        AuthorEntity unknownAuthor = authorRepository.findByNameIgnoreCase("unknown Author");
+
         if (authorRepository.existsById(id)){
+            List<BookEntity> books = bookRepository.findByAuthorEntity_Id(id);
+
+            for (BookEntity book : books) {
+                book.setAuthorEntity(unknownAuthor);
+                bookRepository.save(book);
+            }
+
             authorRepository.deleteById(id);
         }
         else{

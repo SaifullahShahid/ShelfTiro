@@ -18,5 +18,9 @@ public interface BookService {
 
     Page<BookEntity> filterBooks(String isbn, String title, String genre, String authorName, Pageable pageable);
 
-    BookEntity fullUpdateBook(Long id, BookEntity bookEntity);
+    BookEntity fullUpdateBook(Long authorId, Long bookId, BookEntity bookEntity);
+
+    BookEntity partialUpdateBook(Long authorId, Long bookId, BookEntity bookEntity);
+
+    void deleteBook(Long authorId, Long bookId);
 }

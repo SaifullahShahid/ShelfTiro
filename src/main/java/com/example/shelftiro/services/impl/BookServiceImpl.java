@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -80,5 +81,56 @@ public class BookServiceImpl implements BookService {
             return bookRepository.findByAuthorEntity_NameIgnoreCase(authorName,pageable);
         }
         return bookRepository.findAll(pageable);
+    }
+
+    @Override
+    public BookEntity fullUpdateBook(Long authorId, Long bookId, BookEntity bookEntity) {
+        AuthorEntity author = authorRepository.findById(authorId).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Author does not exist by this id!"));
+        return bookRepository.findById(bookId).map(existingBook -> {
+            if (!existingBook.getAuthorEntity().getId().equals(authorId)) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "This book does not belong to the given author");
+            }
+            Optional.of(bookEntity.getIsbn()).ifPresent(existingBook::setIsbn);
+            Optional.of(bookEntity.getTitle()).ifPresent(existingBook::setTitle);
+            Optional.of(bookEntity.getGenre()).ifPresent(existingBook::setGenre);
+            existingBook.setAuthorEntity(author);
+            return bookRepository.save(existingBook);
+        }).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND,"Book by this Id does not exist!"));
+    }
+    @Override
+    public BookEntity partialUpdateBook(Long authorId, Long bookId, BookEntity bookEntity) {
+        AuthorEntity author = authorRepository.findById(authorId).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Author does not exist by this id!"));
+        return bookRepository.findById(bookId).map(existingBook -> {
+            if (!existingBook.getAuthorEntity().getId().equals(authorId)) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "This book does not belong to the given author");
+            }
+            Optional.ofNullable(bookEntity.getIsbn()).ifPresent(existingBook::setIsbn);
+            Optional.ofNullable(bookEntity.getTitle()).ifPresent(existingBook::setTitle);
+            Optional.ofNullable(bookEntity.getGenre()).ifPresent(existingBook::setGenre);
+            existingBook.setAuthorEntity(author);
+            return bookRepository.save(existingBook);
+        }).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND,"Book by this Id does not exist!"));
+    }
+
+    @Override
+    public void deleteBook(Long authorId, Long bookId) {
+        if(!authorRepository.existsById(authorId)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Author by this Id does not exist!");
+        }
+
+        BookEntity book = bookRepository.findById(bookId).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND,"Book by this Id does not exist!"));
+
+        if (!book.getAuthorEntity().getId().equals(authorId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "This book does not belong to the given author");
+        }
+        bookRepository.delete(book);
     }
 }

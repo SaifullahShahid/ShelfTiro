@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+
 @SpringBootTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -129,4 +130,96 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.status().isNotFound()
         );
     }
+    @Test
+    public void testThatfullUpdateBookSuccessfullyReturnsHttp200IsOk() throws Exception{
+        AuthorEntity authorEntityA = TestDataUtil.createTestAuthorEntityA();
+        authorService.createAuthor(authorEntityA);
+        BookEntity bookEntityA = TestDataUtil.createTestBookEntityA();
+        bookService.createBook(authorEntityA.getId(),bookEntityA);
+        BookEntity updatedBook = new BookEntity();
+        updatedBook.setIsbn("Test isbn");
+        updatedBook.setTitle("Test title");
+        updatedBook.setGenre("Test genre");
+        String bookJson = objectMapper.writeValueAsString(updatedBook);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/authors/"+authorEntityA.getId()+"/books/"+bookEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+    @Test
+    public void testThatfullUpdateBookSuccessfullyReturnsUpdatedBook() throws Exception{
+        AuthorEntity authorEntityA = TestDataUtil.createTestAuthorEntityA();
+        authorService.createAuthor(authorEntityA);
+        BookEntity bookEntityA = TestDataUtil.createTestBookEntityA();
+        bookService.createBook(authorEntityA.getId(),bookEntityA);
+        BookEntity updatedBook = new BookEntity();
+        updatedBook.setIsbn("Test isbn");
+        updatedBook.setTitle("Test title");
+        updatedBook.setGenre("Test genre");
+        String bookJson = objectMapper.writeValueAsString(updatedBook);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/authors/"+authorEntityA.getId()+"/books/"+bookEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.isbn").value("Test isbn")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value("Test title")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.genre").value("Test genre")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.author.name").value("J.K. Rowling")
+        );
+    }
+    @Test
+    public void testThatPartialUpdateBookSuccessfullyReturnsUpdatedBook() throws Exception{
+        AuthorEntity authorEntityA = TestDataUtil.createTestAuthorEntityA();
+        authorService.createAuthor(authorEntityA);
+        BookEntity bookEntityA = TestDataUtil.createTestBookEntityA();
+        bookService.createBook(authorEntityA.getId(),bookEntityA);
+        BookEntity updatedBook = new BookEntity();
+        updatedBook.setIsbn("Test isbn");
+        updatedBook.setGenre("Test genre");
+        String bookJson = objectMapper.writeValueAsString(updatedBook);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/api/authors/"+authorEntityA.getId()+"/books/"+bookEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.isbn").value("Test isbn")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value("Harry Potter And The Philosopher's Stone")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.genre").value("Test genre")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.author.name").value("J.K. Rowling")
+        );
+    }
+    @Test
+    public void testThatDeleteBookSuccessfullyReturnsHttp204NoContent() throws Exception{
+        AuthorEntity authorEntityA = TestDataUtil.createTestAuthorEntityA();
+        authorService.createAuthor(authorEntityA);
+        BookEntity book = TestDataUtil.createTestBookEntityA();
+        bookService.createBook(authorEntityA.getId(),book);
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/authors/"+authorEntityA.getId()+"/books/"+book.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNoContent()
+        );
+    }
+
+
 }

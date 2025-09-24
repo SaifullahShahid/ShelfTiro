@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -34,6 +35,8 @@ public interface BookRepository extends JpaRepository <BookEntity, Long> {
     Page<BookEntity> findByTitleIgnoreCaseOrAuthorEntity_NameIgnoreCase(String title, String authorName, Pageable pageable);
 
     Page<BookEntity> findByTitleIgnoreCaseAndGenreIgnoreCase(String title, String genre, Pageable pageable);
+
+    List<BookEntity> findByAuthorEntity_Id(Long id);
 
 
 }

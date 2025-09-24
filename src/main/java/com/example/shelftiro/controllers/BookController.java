@@ -12,9 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.List;
-
 @RestController
 @RequestMapping(path="/api")
 public class BookController {
@@ -58,13 +55,29 @@ public class BookController {
         return books.map(bookMapper::mapToBookResponseDto);
     }
 
-    @PatchMapping(path = "/authors/{author_id}/books")
-    public ResponseEntity<BookResponseDto> fullUpdateBook(@PathVariable("author_id")Long id,
+    @PutMapping(path = "/authors/{author_id}/books/{book_id}")
+    public ResponseEntity<BookResponseDto> fullUpdateBook(@PathVariable("author_id")Long authorId,
+                                                          @PathVariable("book_id")Long bookId,
                                                           @Valid @RequestBody BookRequestDto bookRequestDto){
         BookEntity bookEntity = bookMapper.mapFromBookRequestDto(bookRequestDto);
         return new ResponseEntity<>(
-                bookMapper.mapToBookResponseDto(bookService.fullUpdateBook(id,bookEntity)),
+                bookMapper.mapToBookResponseDto(bookService.fullUpdateBook(authorId,bookId,bookEntity)),
                 HttpStatus.OK);
+    }
+    @PatchMapping(path = "/authors/{author_id}/books/{book_id}")
+    public ResponseEntity<BookResponseDto> partialUpdateBook(@PathVariable("author_id")Long authorId,
+                                                             @PathVariable("book_id")Long bookId,
+                                                             @RequestBody BookRequestDto bookRequestDto){
+        BookEntity bookEntity = bookMapper.mapFromBookRequestDto(bookRequestDto);
+        return new ResponseEntity<>(
+                bookMapper.mapToBookResponseDto(bookService.partialUpdateBook(authorId,bookId,bookEntity)),
+                HttpStatus.OK);
+    }
+    @DeleteMapping(path = "/authors/{author_id}/books/{book_id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable("author_id")Long authorId,
+                                                      @PathVariable("book_id")Long bookId){
+        bookService.deleteBook(authorId,bookId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
