@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoanDto {
+public class LoanResponseDto {
 
     private Long id;
 
@@ -20,7 +20,7 @@ public class LoanDto {
 
     private LocalDate returnDate;
 
-    private UserDto userDto;
+    private UserRequestDto user;
 
     private BookRequestDto book;
 }

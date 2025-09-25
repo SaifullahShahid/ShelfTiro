@@ -4,7 +4,7 @@ import com.example.shelftiro.domain.dto.BookRequestDto;
 import com.example.shelftiro.domain.dto.BookResponseDto;
 import com.example.shelftiro.domain.entities.BookEntity;
 import com.example.shelftiro.mappers.BookMapper;
-import com.example.shelftiro.services.impl.BookServiceImpl;
+import com.example.shelftiro.services.BookService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path="/api")
 public class BookController {
 
-    private final BookServiceImpl bookService;
+    private final BookService bookService;
     private final BookMapper<BookEntity, BookRequestDto, BookResponseDto> bookMapper;
 
-    public BookController(BookServiceImpl bookService, BookMapper<BookEntity, BookRequestDto,BookResponseDto> bookMapper) {
+    public BookController(BookService bookService, BookMapper<BookEntity, BookRequestDto,BookResponseDto> bookMapper) {
         this.bookService = bookService;
         this.bookMapper = bookMapper;
     }

@@ -1,9 +1,9 @@
 package com.example.shelftiro.mappers;
 
-public interface LoanMapper <A,B> {
+public interface LoanMapper <A,B,C> {
 
-    B mapToLoanEntity(A a);
+    B mapToLoanResponseDto(A a);
 
 
-    A mapFromLoanDto(B b);
+    A mapFromLoanRequestDto(C c);
 }
