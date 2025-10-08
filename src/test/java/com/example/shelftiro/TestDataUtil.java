@@ -16,6 +16,8 @@ public class TestDataUtil {
                 .name("Saif")
                 .email("saif@gmail.com")
                 .age(21)
+                .password("s@123")
+                .role("ROLE_ADMIN")
                 .build();
     }
 
@@ -23,6 +25,8 @@ public class TestDataUtil {
         return UserDto.builder()
                 .name("Saif")
                 .email("saif@gmail.com")
+                .password("s@123")
+                .role("ROLE_ADMIN")
                 .age(21)
                 .build();
     }
@@ -30,14 +34,9 @@ public class TestDataUtil {
         return UserDto.builder()
                 .name("Devtiro")
                 .email("devtiro@gmail.com")
+                .password("d@123")
+                .role("ROLE_ADMIN")
                 .age(30)
-                .build();
-    }
-    public static UserDto createTestUserDtoC(){
-        return UserDto.builder()
-                .name("Kanye")
-                .email("kanye@gmail.com")
-                .age(40)
                 .build();
     }
     public static AuthorEntity createTestAuthorEntityA(){

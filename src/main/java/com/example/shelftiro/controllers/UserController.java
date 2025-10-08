@@ -7,6 +7,7 @@ import com.example.shelftiro.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/users")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserDto> listUsers(){
         return userService.listUsers().stream()
                 .map(userMapper::mapToUserDto)

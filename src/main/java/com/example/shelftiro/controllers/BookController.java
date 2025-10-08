@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +26,7 @@ public class BookController {
     }
 
     @PostMapping(path = "/authors/{author_id}/books")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookResponseDto> createBook(@PathVariable("author_id") Long id,
                                                       @Valid @RequestBody BookRequestDto bookRequestDto){
         BookEntity bookEntity = bookMapper.mapFromBookRequestDto(bookRequestDto);

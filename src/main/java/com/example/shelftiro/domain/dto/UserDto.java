@@ -17,14 +17,17 @@ public class UserDto {
 
     private Long id;
 
-
     @NotBlank(message = "Name must not be blank!")
     private String name;
 
-    @NotBlank(message = "Email must be entered")
+    @NotBlank(message = "Email must not be blank")
     private String email;
 
     private Integer age;
+
+    private String password;
+
+    private String role;
 
     private LocalDate createdDate;
 

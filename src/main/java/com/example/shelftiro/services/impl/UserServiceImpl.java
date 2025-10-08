@@ -4,8 +4,8 @@ import com.example.shelftiro.domain.entities.UserEntity;
 import com.example.shelftiro.repositories.UserRepository;
 import com.example.shelftiro.services.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -15,14 +15,23 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @Override
     public UserEntity createUser(UserEntity userEntity) {
+        if (userRepository.findByEmail(userEntity.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email already registered");
+        }
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        if(userEntity.getRole()==null){
+            userEntity.setRole("ROLE_USER");
+        }
         return userRepository.save(userEntity);
     }
 
