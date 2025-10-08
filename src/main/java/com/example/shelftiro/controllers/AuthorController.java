@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api")
+@RequestMapping(path = "/api/authors")
 public class AuthorController {
 
     private final AuthorService authorService;
@@ -26,25 +26,25 @@ public class AuthorController {
         this.authorMapper = authorMapper;
     }
 
-    @PostMapping(path = "/authors")
+    @PostMapping        //create author
     public ResponseEntity<AuthorResponseDto> createAuthor(@Valid @RequestBody AuthorRequestDto authorRequestDto){
         AuthorEntity savedAuthor = authorService.createAuthor(authorMapper.mapFromAuthorRequestDto(authorRequestDto));
         return new ResponseEntity<>(authorMapper.mapToAuthorResponseDto(savedAuthor), HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "/authors")
+    @GetMapping         //get all authors
     public List <AuthorResponseDto> getAuthors(){
         return authorService.listAuthors().stream()
                 .map(authorMapper::mapToAuthorResponseDto)
                 .toList();
     }
 
-    @GetMapping(path = "/authors/{id}")
+    @GetMapping(path = "/{id}")         //get author by author id
     public ResponseEntity <AuthorResponseDto> getAuthorById(@PathVariable("id") Long id){
         return new ResponseEntity<>(authorMapper.mapToAuthorResponseDto(authorService.listAuthorById(id)),HttpStatus.OK);
     }
 
-    @PutMapping(path = "/authors/{id}")
+    @PutMapping(path = "/{id}")         //full update author by author id
     public ResponseEntity <AuthorResponseDto> fullUpdateAuthor(
             @PathVariable("id") Long id,
             @Valid @RequestBody AuthorRequestDto authorRequestDto){
@@ -54,7 +54,7 @@ public class AuthorController {
                 HttpStatus.OK);
     }
 
-    @PatchMapping(path = "/authors/{id}")
+    @PatchMapping(path = "/{id}")       //partial update author by author id
     public ResponseEntity <AuthorResponseDto> partialUpdateAuthor(
             @PathVariable("id") Long id,
             @RequestBody AuthorRequestDto authorRequestDto){
@@ -64,7 +64,7 @@ public class AuthorController {
                 HttpStatus.OK);
     }
 
-    @DeleteMapping(path="/authors/{id}")
+    @DeleteMapping(path="/{id}")        //delte author by author id
     public void deleteAuthor(@PathVariable("id") Long id){
         authorService.deleteAuthor(id);
     }

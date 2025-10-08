@@ -31,6 +31,13 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public LoanEntity createLoan(Long bookId, LoanEntity loanEntity) {
+        boolean exists = loanRepository.
+                existsByBookEntity_IdAndUserEntity_IdAndReturnDateIsNull(
+                        bookId,loanEntity.getUserEntity().getId()
+                );
+        if (exists) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This book is already loaned out to the user.");
+        }
         System.out.println("bookId = " + bookId);
         System.out.println("loanEntity.userEntity = " + loanEntity.getUserEntity().getId());
         if (!bookRepository.existsById(bookId)|| !userRepository.existsById(loanEntity.getUserEntity().getId())){

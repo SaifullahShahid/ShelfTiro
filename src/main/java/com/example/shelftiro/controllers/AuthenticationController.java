@@ -31,14 +31,14 @@ public class AuthenticationController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    @PostMapping("/register")
+    @PostMapping("/register")       //register user
     public ResponseEntity<UserDto> registerUser(@Valid @RequestBody UserDto registerRequestDto){
         UserEntity userEntity = userMapper.mapFromUserDto(registerRequestDto);
         UserEntity savedUserEntity = userService.createUser(userEntity);
         return new ResponseEntity<>(userMapper.mapToUserDto(savedUserEntity),HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login")          //login user by user's email and password
     public ResponseEntity<AuthResponseDto> loginUser(@Valid @RequestBody AuthRequestDto authRequestDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequestDto.getEmail(),authRequestDto.getPassword())

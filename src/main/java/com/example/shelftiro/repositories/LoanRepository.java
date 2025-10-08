@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LoanRepository extends JpaRepository <LoanEntity, Long> {
 
+    // Checks if a specific user has already loaned a specific book and not returned it
+    boolean existsByBookEntity_IdAndUserEntity_IdAndReturnDateIsNull(Long bookId, Long userId);
 }

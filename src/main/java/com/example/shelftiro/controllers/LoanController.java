@@ -23,7 +23,7 @@ public class LoanController {
         this.loanMapper = loanMapper;
     }
 
-    @PostMapping(path = "/books/{book_id}/loans")
+    @PostMapping(path = "/books/{book_id}/loans")       //create loan by user id and book id
     public ResponseEntity<LoanResponseDto> createLoan(@PathVariable("book_id") Long bookId,
                                                       @Valid @RequestBody LoanRequestDto LoanRequestDto){
         LoanEntity loanEntity = loanMapper.mapFromLoanRequestDto(LoanRequestDto);

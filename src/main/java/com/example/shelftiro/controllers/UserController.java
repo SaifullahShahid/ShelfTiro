@@ -7,15 +7,13 @@ import com.example.shelftiro.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
-@RequestMapping(path = "/api")
+@RequestMapping(path = "/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -25,27 +23,19 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-    @PostMapping(path = "/users")
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto){
-        UserEntity userEntity = userMapper.mapFromUserDto(userDto);
-        UserEntity savedUserEntity = userService.createUser(userEntity);
-        return new ResponseEntity<>(userMapper.mapToUserDto(savedUserEntity), HttpStatus.CREATED);
-    }
-
-    @GetMapping(path = "/users")
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<UserDto> listUsers(){
+    @GetMapping
+    public List<UserDto> listUsers(){       //get all users
         return userService.listUsers().stream()
                 .map(userMapper::mapToUserDto)
                 .toList();
     }
 
-    @GetMapping(path = "/users/{id}")
+    @GetMapping(path = "/{id}")         //get user by user id
     public ResponseEntity<UserDto> listUserById(@PathVariable("id") Long id){
         return new ResponseEntity<>(userMapper.mapToUserDto(userService.listUserById(id)),HttpStatus.OK);
     }
 
-    @PutMapping(path = "/users/{id}")
+    @PutMapping(path = "/{id}")        //full update user by user id
     public ResponseEntity<UserDto> fullUpdateUser(@PathVariable("id") Long id,
                                                   @Valid @RequestBody UserDto userDto){
         UserEntity userEntity = userMapper.mapFromUserDto(userDto);
@@ -53,14 +43,14 @@ public class UserController {
 
     }
 
-    @PatchMapping(path = "/users/{id}")
+    @PatchMapping(path = "/{id}")      //partial update user by user id
     public ResponseEntity<UserDto> partialUpdateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto){
         UserEntity userEntity = userMapper.mapFromUserDto(userDto);
         return new ResponseEntity<>(userMapper.mapToUserDto(userService.partialUpdateUser(id,userEntity)),HttpStatus.OK);
     }
 
 
-    @DeleteMapping(path="/users/{id}")
+    @DeleteMapping(path="/{id}")     //delete user by user id
     public void deleteUser(@PathVariable("id") Long id){
         userService.deleteUser(id);
     }

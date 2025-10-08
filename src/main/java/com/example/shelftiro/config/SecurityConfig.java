@@ -3,6 +3,7 @@ package com.example.shelftiro.config;
 import com.example.shelftiro.filter.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -42,6 +43,24 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        // BOOKS - Only ADMIN can create/update/delete
+                        .requestMatchers(HttpMethod.POST, "/api/authors/*/books/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/authors/*/books/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/authors/*/books/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/authors/*/books/**").hasRole("ADMIN")
+
+                        // AUTHORS - Only ADMIN can create/update/delete
+                        .requestMatchers(HttpMethod.POST, "/api/authors/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/authors/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/authors/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/authors/**").hasRole("ADMIN")
+
+                        // USERS - Only ADMIN can update/delete/get all users
+                        .requestMatchers(HttpMethod.GET,    "/api/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH,  "/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

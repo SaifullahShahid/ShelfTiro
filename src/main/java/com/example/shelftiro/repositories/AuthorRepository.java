@@ -8,7 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface AuthorRepository extends JpaRepository <AuthorEntity, Long> {
 
     boolean existsByNameIgnoreCase(String name);
-    boolean existsByName(String name);
-
     AuthorEntity findByNameIgnoreCase(String unknownAuthor);
 }
