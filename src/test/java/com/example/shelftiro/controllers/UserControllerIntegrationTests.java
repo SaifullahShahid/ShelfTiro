@@ -30,46 +30,6 @@ public class UserControllerIntegrationTests {
     @Autowired
     private ObjectMapper objectMapper;
 
-
-
-//    @Test
-//    public void testThatCreateUserSuccessfullyReturnsHttp201Created() throws Exception{
-//        UserDto userDto = TestDataUtil.createTestUserDtoA();
-//        String userJson = objectMapper.writeValueAsString(userDto);
-//
-//        mockMvc.perform(
-//                MockMvcRequestBuilders.post("/api/users")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(userJson)
-//        ).andExpect(
-//                MockMvcResultMatchers.status().isCreated()
-//        );
-//
-//    }
-
-//    @Test
-//    public void testThatCreateUserSuccessfullyReturnsSavedUser() throws Exception {
-//
-//        UserDto userDto = TestDataUtil.createTestUserDtoB();
-//        String userJson = objectMapper.writeValueAsString(userDto);
-//
-//        mockMvc.perform(
-//                MockMvcRequestBuilders.post("/api/users")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(userJson)
-//        ).andExpect(
-//                MockMvcResultMatchers.jsonPath("$.id").isNumber()
-//
-//        ).andExpect(
-//                MockMvcResultMatchers.jsonPath("$.name").value("Devtiro")
-//        ).andExpect(
-//                MockMvcResultMatchers.jsonPath("$.email").value("devtiro@gmail.com")
-//        ).andExpect(
-//                MockMvcResultMatchers.jsonPath("$.age").value(30)
-//        ).andExpect(
-//                MockMvcResultMatchers.jsonPath("$.createdDate").exists()
-//        );
-//    }
     @Test
     public void testThatDeleteUserSuccessfullyReturnsHttp204NoContent() throws Exception {
 
