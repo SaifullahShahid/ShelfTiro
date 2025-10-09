@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class LoanServiceImpl implements LoanService {
@@ -30,24 +31,51 @@ public class LoanServiceImpl implements LoanService {
 
 
     @Override
-    public LoanEntity createLoan(Long bookId, LoanEntity loanEntity) {
+    public LoanEntity createLoan(Long userId, LoanEntity loanEntity) {
         boolean exists = loanRepository.
-                existsByBookEntity_IdAndUserEntity_IdAndReturnDateIsNull(
-                        bookId,loanEntity.getUserEntity().getId()
+                existsByUserEntity_IdAndBookEntity_IdAndReturnDateIsNull(
+                        userId,loanEntity.getBookEntity().getId()
                 );
         if (exists) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This book is already loaned out to the user.");
         }
-        System.out.println("bookId = " + bookId);
-        System.out.println("loanEntity.userEntity = " + loanEntity.getUserEntity().getId());
-        if (!bookRepository.existsById(bookId)|| !userRepository.existsById(loanEntity.getUserEntity().getId())){
+        if (!userRepository.existsById(userId)|| !bookRepository.existsById(loanEntity.getBookEntity().getId())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Book or User does not exist");
         }
-        BookEntity book = bookRepository.findById(bookId).get();
-        UserEntity user = userRepository.findById(loanEntity.getUserEntity().getId()).get();
+        BookEntity book = bookRepository.findById(loanEntity.getBookEntity().getId()).get();
+        UserEntity user = userRepository.findById(userId).get();
         loanEntity.setBookEntity(book);
         loanEntity.setUserEntity(user);
         loanEntity.setDueDate(LocalDate.now().plusDays(14));
         return loanRepository.save(loanEntity);
+    }
+
+    @Override
+    public List<LoanEntity> listUserById(Long userid) {
+        if (!userRepository.existsById(userid)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist by this id!");
+        }
+        return loanRepository.findByUserEntity_Id(userid);
+    }
+
+    @Override
+    public LoanEntity returnLoan(Long loanid) {
+        LoanEntity loanEntity= loanRepository.findById(loanid)
+                .orElseThrow(()-> new ResponseStatusException
+                        (HttpStatus.NOT_FOUND,"Loan does not exist by this id!"));
+
+        if (loanEntity.getReturnDate()!=null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Book already returned!");
+        }
+        loanEntity.setReturnDate(LocalDate.now());
+        return loanRepository.save(loanEntity);
+    }
+
+    @Override
+    public void deleteLoan(Long loanid) {
+        if(!loanRepository.existsById(loanid)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Loan does not exist by this id!");
+        }
+        loanRepository.deleteById(loanid);
     }
 }

@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LoanRequestDto {
 
-
-    private UserDto user;
+    private BookResponseDto book;
 
 }
