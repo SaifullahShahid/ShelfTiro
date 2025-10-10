@@ -29,8 +29,8 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
-    public BookEntity createBook(Long id, BookEntity bookEntity) {
-        AuthorEntity author = authorRepository.findById(id).orElseThrow(()->
+    public BookEntity createBook(Long authorid, BookEntity bookEntity) {
+        AuthorEntity author = authorRepository.findById(authorid).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Author does not exist by this id!"));
         bookEntity.setAuthorEntity(author);
         return bookRepository.save(bookEntity);

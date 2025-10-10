@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatusCode;
 import java.util.List;
 
 public interface BookService {
-    BookEntity createBook(Long id, BookEntity bookEntity);
+    BookEntity createBook(Long authorid, BookEntity bookEntity);
 
     List<BookEntity> listBooks();
 

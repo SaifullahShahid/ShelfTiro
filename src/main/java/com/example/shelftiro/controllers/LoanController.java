@@ -5,7 +5,6 @@ import com.example.shelftiro.domain.dto.LoanResponseDto;
 import com.example.shelftiro.domain.entities.LoanEntity;
 import com.example.shelftiro.mappers.LoanMapper;
 import com.example.shelftiro.services.LoanService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,7 @@ public class LoanController {
 
     @PostMapping("/users/{user_id}/loans")       //create loan by user id and book id
     public ResponseEntity<LoanResponseDto> createLoan(@PathVariable("user_id") Long userId,
-                                                      @Valid @RequestBody LoanRequestDto LoanRequestDto){
+                                                      @RequestBody LoanRequestDto LoanRequestDto){
         LoanEntity loanEntity = loanMapper.mapFromLoanRequestDto(LoanRequestDto);
         return new ResponseEntity<>(
                 loanMapper.mapToLoanResponseDto(loanService.createLoan(userId,loanEntity)),

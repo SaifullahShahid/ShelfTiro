@@ -3,6 +3,7 @@ package com.example.shelftiro;
 import com.example.shelftiro.domain.dto.UserDto;
 import com.example.shelftiro.domain.entities.AuthorEntity;
 import com.example.shelftiro.domain.entities.BookEntity;
+import com.example.shelftiro.domain.entities.LoanEntity;
 import com.example.shelftiro.domain.entities.UserEntity;
 
 import java.time.LocalDate;
@@ -51,6 +52,16 @@ public class TestDataUtil {
                 .isbn("11111")
                 .title("Harry Potter And The Philosopher's Stone")
                 .genre("Fantasy Fiction")
+                .build();
+    }
+    public static LoanEntity createLoanEntityA(){
+        return LoanEntity.builder()
+                .bookEntity(BookEntity.builder().id(1L).build())
+                .build();
+    }
+    public static LoanEntity createLoanEntityB(){
+        return LoanEntity.builder()
+                .bookEntity(BookEntity.builder().id(2L).build())
                 .build();
     }
 }

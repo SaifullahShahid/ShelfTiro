@@ -25,11 +25,11 @@ public class BookController {
     }
 
     @PostMapping(path = "/authors/{author_id}/books")   //create book by author id
-    public ResponseEntity<BookResponseDto> createBook(@PathVariable("author_id") Long id,
+    public ResponseEntity<BookResponseDto> createBook(@PathVariable("author_id") Long authorid,
                                                       @Valid @RequestBody BookRequestDto bookRequestDto){
         BookEntity bookEntity = bookMapper.mapFromBookRequestDto(bookRequestDto);
         return new ResponseEntity<>(
-                bookMapper.mapToBookResponseDto(bookService.createBook(id,bookEntity)),
+                bookMapper.mapToBookResponseDto(bookService.createBook(authorid,bookEntity)),
                 HttpStatus.CREATED);
     }
 

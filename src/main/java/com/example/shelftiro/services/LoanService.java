@@ -6,7 +6,7 @@ import com.example.shelftiro.domain.entities.LoanEntity;
 import java.util.List;
 
 public interface LoanService {
-    LoanEntity createLoan(Long bookId, LoanEntity loanEntity);
+    LoanEntity createLoan(Long userId, LoanEntity loanEntity);
 
     List<LoanEntity> listUserById(Long userid);
 
