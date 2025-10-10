@@ -32,6 +32,12 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public LoanEntity createLoan(Long userId, LoanEntity loanEntity) {
+        if(loanEntity.getBookEntity()==null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Book is required");
+        }
+        if (loanEntity.getBookEntity().getId()==null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Book id is null");
+        }
         boolean exists = loanRepository.
                 existsByUserEntity_IdAndBookEntity_IdAndReturnDateIsNull(
                         userId,loanEntity.getBookEntity().getId()
