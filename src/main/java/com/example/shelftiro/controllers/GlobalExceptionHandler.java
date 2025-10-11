@@ -7,6 +7,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -40,6 +41,21 @@ public class GlobalExceptionHandler {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
         problem.setTitle("Endpoint does not exist");
         problem.setDetail("The requested URL was not found: " + ex.getResourcePath());
+        return problem;
+    }
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ProblemDetail handleMethodArgument(MethodArgumentTypeMismatchException ex) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Argument Type Mismatched");
+        String paramName = ex.getName();            // parameter name
+        Object paramValue = ex.getValue();          // value that failed
+        ex.getRequiredType();
+        String expectedType = ex.getRequiredType().getSimpleName();
+
+        problem.setDetail(String.format(
+                "Parameter '%s' with value '%s' could not be converted to type '%s'.",
+                paramName, paramValue, expectedType
+        ));
         return problem;
     }
 

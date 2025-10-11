@@ -67,6 +67,8 @@ public class UserServiceImpl implements UserService {
             existingUser.setName(userEntity.getName());
             existingUser.setEmail(userEntity.getEmail());
             existingUser.setAge(userEntity.getAge());
+            existingUser.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+
             return userRepository.save(existingUser);
         }).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "User by this id does not exist!"));
@@ -87,6 +89,9 @@ public class UserServiceImpl implements UserService {
 
         if (userEntity.getAge() != null) {
             existingUser.setAge(userEntity.getAge());
+        }
+        if (userEntity.getPassword() != null) {
+            existingUser.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         }
         return userRepository.save(existingUser);
     }
